@@ -11,4 +11,6 @@ function doom() {
 
 touch ${TS_G_ENV}.priv && chmod 600 ${TS_G_ENV}.priv && echo "$(jq -r .ops_manager_private_key < ${TS_G_ENV}.json)" > ${TS_G_ENV}.priv
 
-export PKS_SECRET=$(./doom.sh curl -s --path /api/v0/deployed/products/pivotal-container-service-4f341771d3f3159f420c/credentials/.properties.uaa_admin_password | jq -r '.credential.value.secret')
+export PKS_INSTALLATION_GUID=$(./doom.sh curl -s --path /api/v0/deployed/products | jq '.[] | select( .guid | contains( "pivotal-container-service"))' | jq -r .guid)
+
+export PKS_SECRET=$(./doom.sh curl -s --path /api/v0/deployed/products/$PKS_INSTALLATION_GUID/credentials/.properties.uaa_admin_password | jq -r '.credential.value.secret')
