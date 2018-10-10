@@ -1,0 +1,14 @@
+export TS_G_ENV=orinda
+
+export OM_USERNAME=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.username')
+export OM_PASSWORD=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.password')
+export OM_TARGET=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.url')
+export PKS_TARGET=$(cat ${TS_G_ENV}.json | jq -r '.pks_api')
+
+function doom() {
+    om --username $OM_USERNAME --password $OM_PASSWORD --skip-ssl-validation --target $OM_TARGET $*
+}
+
+touch ${TS_G_ENV}.priv && chmod 600 ${TS_G_ENV}.priv && echo "$(jq -r .ops_manager_private_key < ${TS_G_ENV}.json)" > ${TS_G_ENV}.priv
+
+export PKS_SECRET=$(./doom.sh curl -s --path /api/v0/deployed/products/pivotal-container-service-4f341771d3f3159f420c/credentials/.properties.uaa_admin_password | jq -r '.credential.value.secret')
