@@ -4,9 +4,7 @@ This is a collection of scripts that should make using a toolsmiths deployed PKS
 
 # How to use these things?
 
-Once your toolsmiths pipeline has completed you will receive an email titled : 
-`GCP environment: <env_name> | Access & Return info`  In that email will be a link to a metadata file.  
-Download that file first and move it into this directory. 
+Once your toolsmiths pipeline has completed you will receive an email titled : `GCP environment: <env_name> | Access & Return info`  In that email will be a link to a metadata file. Download that file first and move it into this directory. 
 
 Now that you have your `<env_name>.json` in this diectory, Then you just need to edit the `pksrc` file to change the variable : 
 ```
