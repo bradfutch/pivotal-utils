@@ -1,9 +1,9 @@
-export TS_G_ENV=orinda
+export TS_G_ENV=beaumont
 
 export OM_USERNAME=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.username')
 export OM_PASSWORD=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.password')
 export OM_TARGET=$(cat ${TS_G_ENV}.json | jq -r '.ops_manager.url')
-export PKS_TARGET=$(cat ${TS_G_ENV}.json | jq -r '.pks_api')
+export PKS_TARGET=$(cat ${TS_G_ENV}.json | jq -r '.pks_api.url')
 
 touch ${TS_G_ENV}.priv && chmod 600 ${TS_G_ENV}.priv && echo "$(jq -r .ops_manager_private_key < ${TS_G_ENV}.json)" > ${TS_G_ENV}.priv
 
