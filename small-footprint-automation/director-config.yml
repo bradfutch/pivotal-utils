@@ -1,0 +1,55 @@
+---
+iaas-configuration:
+  access_key_id: <DYNAMIC>
+  secret_access_key: <DYNAMIC>
+  vpc_id: <DYNAMIC>
+  security_group: <DYNAMIC>
+  key_pair_name: pcf
+  ssh_private_key: |
+    <YOUR PRIVATE KEY>
+  region: <DYNAMIC>
+  encrypted: false
+director-configuration:
+  ntp_servers_string: 0.amazon.pool.ntp.org
+az-configuration:
+- name: <DYNAMIC>
+networks-configuration:
+  icmp_checks_enabled: false
+  networks:
+  - name: opsman-network
+    subnets:
+    - iaas_identifier: <DYNAMIC>
+      cidr: 10.0.0.0/24
+      reserved_ip_ranges: 10.0.0.0-10.0.0.4
+      dns: 8.8.8.8
+      gateway: 10.0.0.1
+      availability_zone_names:
+      - us-west-2a
+  - name: pcf-pas-subnet
+    subnets:
+    - iaas_identifier: <DYNAMIC>
+      cidr: 10.0.4.0/22
+      reserved_ip_ranges: 10.0.4.0-10.0.4.4
+      dns: 8.8.8.8
+      gateway: 10.0.4.1
+      availability_zone_names:
+      - us-west-2a
+  - name: pcf-management-subnet
+    subnets:
+    - iaas_identifier: <DYNAMIC>
+      cidr: 10.0.16.0/28
+      reserved_ip_ranges: 10.0.16.0-10.0.16.4
+      dns: 8.8.8.8
+      gateway: 10.0.16.1
+      availability_zone_names:
+      - us-west-2a
+network-assignment:
+  singleton_availability_zone:
+    name: us-west-2a
+  network:
+    name: opsman-network
+vmextensions-configuration:
+  some_vm_extension:
+    cloud_properties:
+      source_dest_check: false
+
