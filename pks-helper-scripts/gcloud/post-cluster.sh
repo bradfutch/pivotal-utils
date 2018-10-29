@@ -4,7 +4,7 @@ set -x
 
 cluster_name=${1:-sandbox}
 #note this could be automatic, but it's not
-lb_name=first
+lb_name=${1:-first}
 
 echo "configuring cluster $cluster_name for access ..."
 
@@ -32,4 +32,4 @@ echo "adding instance to load balancer..."
 
 #gcloud compute forwarding-rules set-target first --target-instance=$cluster_name-target --target-instance-zone=$zone --region=$region
 
-gcloud compute target-pools add-instances first --instances=$master_vm_name --instances-zone=$zone --region=$region
+gcloud compute target-pools add-instances $lb_name --instances=$master_vm_name --instances-zone=$zone --region=$region
