@@ -8,6 +8,8 @@ sudo apt-get update -y
 
 sudo apt-get install -y ruby2.4
 
+sudo apt-get install -y httpie
+
 sudo -get upgrade -y
 
 sudo apt-get install -y build-essential zlibc zlib1g-dev ruby \

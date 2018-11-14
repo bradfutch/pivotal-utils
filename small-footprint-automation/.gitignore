@@ -4,3 +4,6 @@
 *.terraform/
 boshrc
 *.pivotal
+pcf.pem
+keysrc
+aws-pcf-user-keys

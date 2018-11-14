@@ -7,6 +7,7 @@ resource "aws_subnet" "pcf-public-subnet" {
   vpc_id     = "${aws_vpc.pcf-vpc.id}"
   cidr_block = "10.0.0.0/24"
   availability_zone = "${var.az}"
+  map_public_ip_on_launch = true
 
   tags {
     Name = "pcf-public-subnet"
@@ -66,6 +67,15 @@ resource "aws_route_table" "nat_route_table" {
   }
 }
 
+resource "aws_route_table_association" "nat" {
+  subnet_id      = "${aws_subnet.pcf-pas-subnet.id}"
+  route_table_id = "${aws_route_table.nat_route_table.id}"
+}
+
+resource "aws_route_table_association" "internet" {
+  subnet_id      = "${aws_subnet.pcf-public-subnet.id}"
+  route_table_id = "${aws_vpc.pcf-vpc.default_route_table_id}"
+}
 
 output "vpc_id" {
   value = "${aws_vpc.pcf-vpc.id}"

@@ -30,7 +30,7 @@ function doBosh() {
 
     om --skip-ssl-validation --target $target configure-authentication \
     --decryption-passphrase $password$password$password \
-    --username admin \
+    --username $username \
     --password $password 
 
     # replace the director-config values with the dynamically generated ones from the AWS environment we 
