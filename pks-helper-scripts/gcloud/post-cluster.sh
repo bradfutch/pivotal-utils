@@ -4,7 +4,7 @@ set -x
 
 cluster_name=${1:-sandbox}
 #note this could be automatic, but it's not
-lb_name=${1:-first}
+lb_name=${2:-first}
 
 echo "configuring cluster $cluster_name for access ..."
 
