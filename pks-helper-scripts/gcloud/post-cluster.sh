@@ -8,19 +8,27 @@ lb_name=${2:-first}
 
 echo "configuring cluster $cluster_name for access ..."
 
-master_vm_ip=$(pks cluster $cluster_name --json | jq -r '.kubernetes_master_ips | .[0]')
+master_vm_ips=($(pks cluster $cluster_name --json | jq -r '.kubernetes_master_ips | .[]'))
 
-echo "$cluster_name master IP found : $master_vm_ip"
 
-master_vm_name=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"$master_vm_ip\") | .name")
+echo "$cluster_name master IPs found : "
+printf "%s\n" "${master_vm_ips[@]}"
 
-echo "found master vm name $master_vm_name"
+master_vm_names=()
+for i in "${master_vm_ips[@]}"
+do
+   thing=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"$i\") | .name")
+   master_vm_names+=("$thing")
+done
 
-region=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"10.0.11.10\") | .zone" | rev | cut -d/ -f1 | rev | cut -d- -f1-2)
+echo "master vm names..."
+printf "%s\n" "${master_vm_names[@]}"
+
+region=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"${master_vm_ips[0]}\") | .zone" | rev | cut -d/ -f1 | rev | cut -d- -f1-2)
 
 echo "region $region"
 
-zone=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"10.0.11.10\") | .zone" | rev | cut -d/ -f1 | rev)
+zone=$(gcloud compute instances list --format json | jq -r ".[] | select( .networkInterfaces | .[].networkIP == \"${master_vm_ips[0]}\") | .zone" | rev | cut -d/ -f1 | rev)
 
 echo "zone $zone"
 
@@ -32,4 +40,8 @@ echo "adding instance to load balancer..."
 
 #gcloud compute forwarding-rules set-target first --target-instance=$cluster_name-target --target-instance-zone=$zone --region=$region
 
-gcloud compute target-pools add-instances $lb_name --instances=$master_vm_name --instances-zone=$zone --region=$region
+for name in "${master_vm_names[@]}"
+do
+    echo "adding master vm : $name"
+    gcloud compute target-pools add-instances $lb_name --instances=$name --instances-zone=$zone --region=$region
+done
